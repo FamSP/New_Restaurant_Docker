@@ -5,7 +5,7 @@ const Restaurant = sequelize.define("restuarant", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoincrement: true,
+    autoIncrement: true,
   },
   title: {
     type: DataTypes.STRING,
@@ -15,7 +15,7 @@ const Restaurant = sequelize.define("restuarant", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  imageURL: {
+  imageUrl: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -25,7 +25,7 @@ Restaurant.sync({ force: false })
   .then(() => {
     console.log("Table created or already existe");
   })
-  .catch((err) => {
+  .catch((error) => {
     console.log("Error creating table", error);
   });
 export default Restaurant;
