@@ -6,13 +6,13 @@ const Update = () => {
   const [restaurant, setRestaurant] = useState({
     title: "",
     type: "",
-    img: "",
+    imageUrl: "",
   });
 
   //2.GEt Restaurant
   useEffect(() => {
     //cal api: getAllRestaurants
-    fetch("http://localhost:3000/restaurants/" + id)
+    fetch("http://localhost:5000/api/v1/restaurant/" + id)
       .then((res) => {
         //convert to json format
         console.log(res);
@@ -34,16 +34,22 @@ const Update = () => {
   };
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3000/restaurants/" + id, {
-        method: "PUT",
-        body: JSON.stringify(restaurant),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/v1/restaurant/" + id,
+        {
+          method: "PUT",
+          body: JSON.stringify(restaurant),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.ok) {
         alert("Restaurant Updated succesfully!!!");
         setRestaurant({
           title: "",
           type: "",
-          img: "",
+          imageUrl: "",
         });
       }
     } catch (error) {
@@ -96,14 +102,14 @@ const Update = () => {
                 ClassName="grow"
                 class="w-full input input-bordered"
                 onChange={handleChange}
-                placeholder="Restaurant Img"
-                value={restaurant.img}
-                name="img"
+                placeholder="Restaurant imageUrl"
+                value={restaurant.imageUrl}
+                name="imageUrl"
               />
 
-              {restaurant.img && (
+              {restaurant.imageUrl && (
                 <div ClassName="flex items-center gap-2">
-                  <img ClassName="h-32" src={restaurant.img}></img>
+                  <img ClassName="h-32" src={restaurant.imageUrl}></img>
                 </div>
               )}
             </div>

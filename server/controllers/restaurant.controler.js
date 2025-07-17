@@ -5,7 +5,7 @@ restaurantController.create = async (req, res) => {
   const { title, type, imageUrl } = req.body;
   //validate data
   if (!title || !type || !imageUrl) {
-    res.status(400).send({ message: "title , Type or imgUrl Can't be empty" });
+    res.status(400).send({ message: "title , Type or imagUrl Can't be empty" });
     return;
   }
   await Restaurant.findOne({ where: { title } }).then((restaurant) => {
@@ -70,7 +70,7 @@ restaurantController.update = async (req, res) => {
     }
   )
     .then((num) => {
-      if (num == 1) {
+      if (num[0] == 1) {
         res.send({ message: "Restaurant update succesfully!" });
       } else {
         res.status(400).send({
@@ -93,7 +93,7 @@ restaurantController.deleteById = async (req, res) => {
   }
   await Restaurant.destroy({ where: { id } })
     .then((num) => {
-      if (num === 1) {
+      if (num[0] === 1) {
         res.send({ message: "Restaurant was DELETE succesfully" });
       } else {
         res.status(400).send({

@@ -2,13 +2,18 @@ import React from "react";
 
 const Card = (props) => {
   const handleDelete = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this restaurant?");
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this restaurant?"
+    );
     if (!isConfirmed) return;
 
     try {
-      const response = await fetch("http://localhost:3000/restaurants/" + id, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/v1/restaurant/" + id,
+        {
+          method: "DELETE",
+        }
+      );
       if (response.ok) {
         alert("Restaurant deleted successfully!");
         window.location.reload();
@@ -21,7 +26,7 @@ const Card = (props) => {
   return (
     <div className="card bg-base-100 w-96 shadow-sm">
       <figure>
-        <img src={props.img} alt="Restaurant" />
+        <img src={props.imageUrl} alt="Restaurant" />
       </figure>
       <div className="card-body">
         <h2 className="card-title">

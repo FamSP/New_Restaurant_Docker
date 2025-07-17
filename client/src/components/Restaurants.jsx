@@ -12,7 +12,7 @@ const Restaurants = ({ restaurants }) => {
                 id={restaurants.id}
                 title={restaurants.title}
                 type={restaurants.type}
-                img={restaurants.img}
+                imageUrl={restaurants.imageUrl}
               />
             );
           })}

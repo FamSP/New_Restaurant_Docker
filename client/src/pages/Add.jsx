@@ -4,7 +4,7 @@ const Add = () => {
   const [restaurant, setRestaurant] = useState({
     title: "",
     type: "",
-    img: "",
+    imageUrl: "",
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -12,16 +12,19 @@ const Add = () => {
   };
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3000/restaurants", {
+      const response = await fetch("http://localhost:5000/api/v1/restaurant", {
         method: "POST",
         body: JSON.stringify(restaurant),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
       if (response.ok) {
         alert("Restaurannt Adds succesfully!!!");
         setRestaurant({
           title: "",
           type: "",
-          img: "",
+          imageUrl: "",
         });
       }
     } catch (error) {
@@ -72,13 +75,13 @@ const Add = () => {
                 ClassName="grow"
                 class="w-full input input-bordered"
                 onChange={handleChange}
-                placeholder="Restaurant Img"
-                name="img"
+                placeholder="Restaurant imageUrl"
+                name="imageUrl"
               />
 
-              {restaurant.img && (
+              {restaurant.imageUrl && (
                 <div ClassName="flex items-center gap-2">
-                  <img ClassName="h-32" src={restaurant.img}></img>
+                  <img ClassName="h-32" src={restaurant.imageUrl}></img>
                 </div>
               )}
             </div>
@@ -91,7 +94,12 @@ const Add = () => {
               >
                 Add
               </button>
-              <a href={"/"} button type="button" class="btn bg-red-500 text-white px-6">
+              <a
+                href={"/"}
+                button
+                type="button"
+                class="btn bg-red-500 text-white px-6"
+              >
                 Cancel
               </a>
             </div>
