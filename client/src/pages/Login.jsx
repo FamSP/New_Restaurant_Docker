@@ -1,31 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Add = () => {
-  const [restaurant, setRestaurant] = useState({
-    title: "",
-    type: "",
-    imageUrl: "",
+function Login() {
+  const [login, setLogin] = useState({
+    username: "",
+    password: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRestaurant({ ...restaurant, [name]: value });
+    setLogin({ ...login, [name]: value });
   };
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/v1/restaurant", {
+      const response = await fetch("http://localhost:5000/api/v1/auth/login", {
         method: "POST",
-        body: JSON.stringify(restaurant),
+        body: JSON.stringify(login),
         headers: {
           "Content-Type": "application/json",
         },
       });
       if (response.ok) {
         alert("Restaurannt Adds succesfully!!!");
-        setRestaurant({
-          title: "",
-          type: "",
-          imageUrl: "",
+        setLogin({
+          username: "",
+          password: "",
         });
       }
     } catch (error) {
@@ -42,49 +40,29 @@ const Add = () => {
           <form class="space-y-4">
             <div>
               <label class="label">
-                <span class="text-base label-text">Title</span>
+                <span class="text-base label-text">Username</span>
               </label>
 
               <input
                 type="text"
-                placeholder="Enter title"
+                placeholder="Enter your Username."
                 class="w-full input input-bordered"
-                name="title"
+                name="username"
                 onChange={handleChange}
               />
             </div>
 
             <div>
               <label class="label">
-                <span class="text-base label-text">Type</span>
+                <span class="text-base label-text">Password</span>
               </label>
               <input
                 type="text"
-                placeholder="Enter type"
+                placeholder="Enter your Password"
                 class="w-full input input-bordered"
-                name="type"
+                name="password"
                 onChange={handleChange}
               />
-            </div>
-
-            <div>
-              <label class="label">
-                <span class="text-base label-text">Image URL</span>
-              </label>
-              <input
-                type="text"
-                ClassName="grow"
-                class="w-full input input-bordered"
-                onChange={handleChange}
-                placeholder="Restaurant imageUrl"
-                name="imageUrl"
-              />
-
-              {restaurant.imageUrl && (
-                <div ClassName="flex items-center gap-2">
-                  <img ClassName="h-32" src={restaurant.imageUrl}></img>
-                </div>
-              )}
             </div>
 
             <div class="flex justify-center items-center my-6 space-x-4">
@@ -93,7 +71,7 @@ const Add = () => {
                 class="btn bg-green-500 text-white px-6"
                 onClick={handleSubmit}
               >
-                Add
+                login
               </button>
               <a
                 href={"/"}
@@ -109,6 +87,6 @@ const Add = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Add;
+export default Login;

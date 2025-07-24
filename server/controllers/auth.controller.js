@@ -2,6 +2,7 @@ import db from "../models/index.js";
 const User = db.User;
 const Role = db.Role;
 import bcrypt from "bcryptjs"; //เข้ารหัส password
+import config from "../config/auth.config.js";
 import jwt from "jsonwebtoken";
 //สำหรับใช้ or
 import { Op } from "sequelize";
@@ -25,7 +26,7 @@ authController.signUp = async (req, res) => {
         username,
         name,
         email,
-        password,
+        password: bcrypt.hashSync(password, 8),
       };
       User.create(newUser)
         .then((user) => {
@@ -57,6 +58,48 @@ authController.signUp = async (req, res) => {
           res.status(500).send({ message: error.message || "Something error" });
         });
     });
+};
+
+authController.signIn = async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    res.status(400).send({ message: "Username or Password are missing" });
+    return;
+  }
+  await User.findOne({ where: { username: username } }).then((user) => {
+    if (!user) {
+      res.status(404).send({ message: "Username not found." });
+    }
+    const passworisValid = bcrypt.compareSync(password, user.password);
+    if (!passworisValid) {
+      res.status(401).send({ message: "invalid Password" });
+    }
+    //Valid USer
+    const token = jwt.sign({ username: user.username }, config.secret, {
+      expiresIn: 86400, //60 sec * 60min * 24hr
+    });
+    const authorities = [];
+    user
+      .getRoles()
+      .then((roles) => {
+        for (let i = 0; i < roles.length; i++) {
+          authorities.push("ROLES_" + roles[i].name.toUpperCase());
+        }
+        res.send({
+          token: token,
+          authorities: authorities,
+          userInfo: {
+            name: user.name,
+            email: user.email,
+            username: user.username,
+          },
+        });
+      })
+
+      .catch((error) => {
+        res.status(500).send({ message: error.message || "Something error" });
+      });
+  });
 };
 
 export default authController;

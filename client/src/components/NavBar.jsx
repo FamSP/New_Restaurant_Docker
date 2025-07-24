@@ -59,9 +59,13 @@ const NavBar = () => {
             ))}
           </ul>
         </div>
-       <div className="navbar-end flex gap-4">
-            <button className="btn btn-outline btn-primary">Register</button>
-            <button className="btn btn-outline btn-success">Login</button>
+        <div className="navbar-end flex gap-4">
+          <a href="/register" className="btn btn-outline btn-primary">
+            Register
+          </a>
+          <a href="/login" className="btn btn-outline btn-success">
+            Login
+          </a>
         </div>
       </div>
     </div>
