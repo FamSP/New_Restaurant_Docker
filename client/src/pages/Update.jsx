@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
+import RestaurantService from "../services/restaurant.service";
 const Update = () => {
   //Get ID from URL
   const { id } = useParams();
@@ -11,21 +12,23 @@ const Update = () => {
 
   //2.GEt Restaurant
   useEffect(() => {
-    //cal api: getAllRestaurants
-    fetch("http://localhost:5000/api/v1/restaurant/" + id)
-      .then((res) => {
-        //convert to json format
-        console.log(res);
-        return res.json();
-      })
-      .then((response) => {
-        //save to state
-        setRestaurant(response);
-      })
-      .catch((err) => {
-        //cath error
-        console.log(err.message);
-      });
+    const editRestaurantById = async (id) => {
+      try {
+        const response = await RestaurantService.editRestaurantById(id);
+
+        if (response.status === 200) {
+          setRestaurant(response.data);
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "Get All Restaurants",
+          icon: "error",
+          text: error?.response?.data?.message || error.message,
+        });
+      }
+    };
+
+    editRestaurantById(); // Call the async function
   }, [id]);
 
   const handleChange = (e) => {

@@ -36,7 +36,7 @@ const initRole = () => {
   role.create({ id: 3, name: "admin" });
 };
 
-// db.sequelize.sync({ force: true }).then(() => {
-//   initRole();
-//   console.log("Drop Sync");
-// });
+db.sequelize.sync({ force: true }).then(() => {
+  initRole();
+  console.log("Drop Sync");
+});

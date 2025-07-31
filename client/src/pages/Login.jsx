@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Login() {
   const [login, setLogin] = useState({
@@ -10,77 +10,91 @@ function Login() {
     const { name, value } = e.target;
     setLogin({ ...login, [name]: value });
   };
-  const handleSubmit = async () => {
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent page reload
     try {
       const response = await fetch("http://localhost:5000/api/v1/auth/login", {
         method: "POST",
-        body: JSON.stringify(login),
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(login),
       });
+
       if (response.ok) {
-        alert("Restaurannt Adds succesfully!!!");
+        alert("Login successful!");
         setLogin({
           username: "",
           password: "",
         });
+      } else {
+        alert("Login failed. Please check your credentials.");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error);
     }
   };
+
+  const handleCancel = () => {
+    setLogin({
+      username: "",
+      password: "",
+    });
+  };
+
   return (
     <div className="container mx-auto">
-      <div class="relative flex flex-col justify-center h-screen overflow-hidden">
-        <div class="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
-          <h1 class="text-2xl font-semibold text-center text-gray-700 mb-6">
-            Add Item
+      <div className="relative flex flex-col justify-center h-screen overflow-hidden">
+        <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
+          <h1 className="text-2xl font-semibold text-center text-gray-700 mb-6">
+            Login
           </h1>
-          <form class="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label class="label">
-                <span class="text-base label-text">Username</span>
+              <label className="label">
+                <span className="text-base label-text">Username</span>
               </label>
-
               <input
                 type="text"
-                placeholder="Enter your Username."
-                class="w-full input input-bordered"
                 name="username"
+                value={login.username}
                 onChange={handleChange}
+                className="w-full input input-bordered"
+                placeholder="Enter your username"
+                required
               />
             </div>
 
             <div>
-              <label class="label">
-                <span class="text-base label-text">Password</span>
+              <label className="label">
+                <span className="text-base label-text">Password</span>
               </label>
               <input
-                type="text"
-                placeholder="Enter your Password"
-                class="w-full input input-bordered"
+                type="password"
                 name="password"
+                value={login.password}
                 onChange={handleChange}
+                className="w-full input input-bordered"
+                placeholder="Enter your password"
+                required
               />
             </div>
 
-            <div class="flex justify-center items-center my-6 space-x-4">
+            <div className="flex justify-center items-center my-6 space-x-4">
               <button
                 type="submit"
-                class="btn bg-green-500 text-white px-6"
-                onClick={handleSubmit}
+                className="btn bg-green-500 text-white px-6"
               >
-                login
+                Login
               </button>
-              <a
-                href={"/"}
-                button
+              <button
                 type="button"
-                class="btn bg-red-500 text-white px-6"
+                onClick={handleCancel}
+                className="btn bg-red-500 text-white px-6"
               >
                 Cancel
-              </a>
+              </button>
             </div>
           </form>
         </div>
