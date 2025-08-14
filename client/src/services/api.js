@@ -1,6 +1,6 @@
 import axios from "axios";
 import TokenService from "./token.service";
-const baseURL = import.meta.ent.VITE_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 const instant = axios.create({
   baseURL: baseURL,
@@ -22,3 +22,4 @@ instant.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+export default instant;

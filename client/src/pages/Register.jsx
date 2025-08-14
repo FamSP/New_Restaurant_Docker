@@ -1,33 +1,51 @@
-import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
+import AuthService from "../services/auth.service";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
-const Addrestaurant = () => {
-  const [restaurant, setRestuarant] = useState({
-    title: "",
-    type: "",
-    img: "",
+const register = () => {
+  const [register, setRegister] = useState({
+    username: "",
+    name: "",
+    email: "",
+    password: "",
   });
-  const handle = (e) => {
+  const navigate = useNavigate();
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setRestuarant({ ...restaurant, [name]: value });
+    setRegister((Register) => ({ ...Register, [name]: value }));
   };
 
   const handleSubmit = async () => {
+    console.log(123);
     try {
-      const response = await fetch("http://localhost:5000/restaurants", {
-        method: "POST",
-        body: JSON.stringify(restaurant),
-      });
-      if (response.ok) {
-        alert("Restaurant added Succesfully");
-        setRestuarant({
-          title: "",
-          type: "",
-          img: "",
+      const newUser = await AuthService.register(
+        register.username,
+        register.name,
+        register.email,
+        register.password
+      );
+
+      if (newUser.status === 200) {
+        Swal.fire({
+          title: "User Register",
+          text: newUser.data.message,
+          icon: "success",
         });
+        setRegister({
+          username: "",
+          name: "",
+          email: "",
+          password: "",
+        });
+        navigate("/login");
       }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        title: "User Register",
+        text: error?.response?.data?.message || error.message,
+        icon: "error",
+      });
     }
   };
 
@@ -35,57 +53,64 @@ const Addrestaurant = () => {
     <div className="container mx-auto ">
       <h1 className="title justify-center text-3xl text-center m-5 p-5">
         {" "}
-        Add New Restaurant
+        Regiter
       </h1>
       <div className="mt-10">
         <div className="flex justify-center">
           <fieldset className="fieldset">
-            <legend className="fieldset-legend jus">
-              What is restaurant name?
-            </legend>
+            <legend className="fieldset-legend jus">Username</legend>
             <input
               type="text"
-              value={restaurant.title}
-              name="title"
-              onChange={handle}
+              value={register.username}
+              name="username"
+              onChange={handleChange}
               className="input input-bordered input-lg w-[700px]"
-              placeholder="Type here"
+              placeholder="USERNAME"
             />
           </fieldset>
         </div>
 
         <div className="flex justify-center space-y-2">
           <fieldset className="fieldset">
-            <legend className="fieldset-legend jus">What is your type?</legend>
+            <legend className="fieldset-legend jus">Name</legend>
             <input
               type="text"
-              value={restaurant.type}
-              name="type"
-              onChange={handle}
+              value={register.name}
+              name="name"
+              onChange={handleChange}
               className="input input-bordered input-lg w-[700px]"
-              placeholder="Type here"
+              placeholder="NAME"
             />
           </fieldset>
         </div>
         <div className="flex justify-center space-y-2">
           <fieldset className="fieldset">
-            <legend className="fieldset-legend jus">Image URL</legend>
+            <legend className="fieldset-legend jus">Email</legend>
             <input
               type="text"
-              name="img"
-              value={restaurant.img}
-              onChange={handle}
+              name="email"
+              value={register.email}
+              onChange={handleChange}
               className="input input-bordered input-lg w-[700px]"
-              placeholder="Type here"
+              placeholder="EMAIL"
+            />
+          </fieldset>
+        </div>
+        <div className="flex justify-center space-y-2">
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend jus">Password</legend>
+            <input
+              type="password"
+              name="password"
+              value={register.password}
+              onChange={handleChange}
+              className="input input-bordered input-lg w-[700px]"
+              placeholder="PASSWORD"
             />
           </fieldset>
         </div>
       </div>
-      {restaurant.img && (
-        <div className="flex justify-center">
-          <img src={restaurant.img} alt="preview image"></img>
-        </div>
-      )}
+
       <div className="flex justify-end gap-5 px-80 mt-10">
         <button className="btn btn-accent" onClick={handleSubmit}>
           Add
@@ -96,4 +121,4 @@ const Addrestaurant = () => {
   );
 };
 
-export default Addrestaurant;
+export default register;

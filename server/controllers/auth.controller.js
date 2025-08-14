@@ -69,6 +69,7 @@ authController.signIn = async (req, res) => {
   await User.findOne({ where: { username: username } }).then((user) => {
     if (!user) {
       res.status(404).send({ message: "Username not found." });
+      return;
     }
     const passworisValid = bcrypt.compareSync(password, user.password);
     if (!passworisValid) {

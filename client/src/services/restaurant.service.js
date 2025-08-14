@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "./api.js";
 const RES_API = import.meta.env.VITE_RES_API;
 
 //get all restataurant

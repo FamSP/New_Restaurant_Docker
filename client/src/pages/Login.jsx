@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import AuthService from "../services/auth.service";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
-function Login() {
+const Login = () => {
   const [login, setLogin] = useState({
     username: "",
     password: "",
@@ -8,31 +11,37 @@ function Login() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLogin({ ...login, [name]: value });
+    setLogin((prevLogin) => ({ ...prevLogin, [name]: value }));
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page reload
+  const navigate = useNavigate();
+  const handleSubmit = async () => {
+    console.log(123);
     try {
-      const response = await fetch("http://localhost:5000/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(login),
-      });
+      const currentUser = await AuthService.login(
+        login.username,
+        login.password
+      );
 
-      if (response.ok) {
-        alert("Login successful!");
-        setLogin({
-          username: "",
-          password: "",
+      if (currentUser.status === 200) {
+        Swal.fire({
+          title: "User login",
+          text: "login succesfully",
+          icon: "success",
+        }).then(() => {
+          setLogin({
+            username: "",
+            password: "",
+          });
+          navigate("/");
         });
-      } else {
-        alert("Login failed. Please check your credentials.");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.log(error);
+      Swal.fire({
+        title: "User login",
+        text: error?.response?.data?.message,
+        icon: "error",
+      });
     }
   };
 
@@ -50,7 +59,7 @@ function Login() {
           <h1 className="text-2xl font-semibold text-center text-gray-700 mb-6">
             Login
           </h1>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="space-y-4">
             <div>
               <label className="label">
                 <span className="text-base label-text">Username</span>
@@ -85,6 +94,7 @@ function Login() {
               <button
                 type="submit"
                 className="btn bg-green-500 text-white px-6"
+                onClick={handleSubmit}
               >
                 Login
               </button>
@@ -96,11 +106,11 @@ function Login() {
                 Cancel
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Login;
