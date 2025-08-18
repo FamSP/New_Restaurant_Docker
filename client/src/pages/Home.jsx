@@ -4,10 +4,10 @@ import Swal from "sweetalert2";
 import RestaurantService from "../services/restaurant.service";
 const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
-  const [filetedRestaurants, SetFilterRestaurants] = useState([]);
+  const [filetedRestaurants, setFilterRestaurants] = useState([]);
   const handleSearch = (keyword) => {
     if (keyword === "") {
-      SetFilterRestaurants(restaurants);
+      setFilterRestaurants(restaurants);
       return;
     }
     const result = restaurants.filter((restaurant) => {
@@ -17,7 +17,7 @@ const Home = () => {
       );
     });
 
-    SetFilterRestaurants(result);
+    setFilterRestaurants(result);
   };
   useEffect(() => {
     const getAllRestaurant = async () => {
@@ -26,7 +26,7 @@ const Home = () => {
 
         if (response.status === 200) {
           setRestaurants(response.data);
-          setFilteredRestaurants(response.data); // use camelCase
+          setFilterRestaurants(response.data); // use camelCase
         }
       } catch (error) {
         Swal.fire({

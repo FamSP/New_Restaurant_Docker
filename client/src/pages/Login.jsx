@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AuthService from "../services/auth.service";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
-
+import { useAuthContext } from "../context/authContext";
 const Login = () => {
   const [login, setLogin] = useState({
     username: "",
@@ -14,6 +14,18 @@ const Login = () => {
     setLogin((prevLogin) => ({ ...prevLogin, [name]: value }));
   };
   const navigate = useNavigate();
+  const { login: loginFn, user } = useAuthContext();
+  // useEffect นั้นใช้สำหรับการในการโหลดหน้าเว็ป
+  useEffect(
+    () => {
+      if (user) {
+        navigate("/");
+      }
+    },
+    //ถ้าไม่ได้ใส่อะไรเลยไปในนี้นั้นจะทำให้เรานั้นจะทำการ refresce หน้าเดียว
+    [user]
+  );
+
   const handleSubmit = async () => {
     console.log(123);
     try {
@@ -32,6 +44,7 @@ const Login = () => {
             username: "",
             password: "",
           });
+          loginFn(currentUser.data);
           navigate("/");
         });
       }

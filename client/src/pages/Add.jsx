@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuthContext } from "../context/authContext";
+import { useNavigate } from "react-router";
 
 const Add = () => {
   const [restaurant, setRestaurant] = useState({
@@ -6,11 +8,20 @@ const Add = () => {
     type: "",
     imageUrl: "",
   });
-
+  const { user } = useAuthContext();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRestaurant({ ...restaurant, [name]: value });
   };
+  const navigate = useNavigate();
+  useEffect(
+    () => {
+      if (!user && !user?.authorities.includes("ROLES_ADMIN")) {
+        navigate("/");
+      }
+    },
+    [ user ]
+  );
   const handleSubmit = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/v1/restaurant", {
@@ -33,8 +44,8 @@ const Add = () => {
     }
   };
   return (
-    <div className="container mx-auto">
-      <div class="relative flex flex-col justify-center h-screen overflow-hidden">
+    <div class="relative flex flex-col justify-center h-screen overflow-hidden">
+      <div className="container mx-auto">
         <div class="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
           <h1 class="text-2xl font-semibold text-center text-gray-700 mb-6">
             Add Item
