@@ -30,13 +30,13 @@ app.listen(PORT, () => {
 import db from "./models/index.js";
 const role = db.Role;
 
-const initRole = () => {
-  role.create({ id: 1, name: "user" });
-  role.create({ id: 2, name: "moderator" });
-  role.create({ id: 3, name: "admin" });
-};
+// const initRole = () => {
+//   role.create({ id: 1, name: "user" });
+//   role.create({ id: 2, name: "moderator" });
+//   role.create({ id: 3, name: "admin" });
+// };
 
-db.sequelize.sync({ force: true }).then(() => {
-  initRole();
-  console.log("Drop Sync");
-});
+// db.sequelize.sync({ force: false }).then(() => {
+//   initRole();
+//   console.log("Drop Sync");
+// });

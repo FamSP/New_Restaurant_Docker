@@ -15,7 +15,7 @@ db.Role = Role;
 db.User.belongsToMany(db.Role, {
   through: "user_roles",
 });
-
+//สองอันนี้ทำให้เกิด setroles กับ getroles
 db.Role.belongsToMany(db.User, {
   through: "user_roles",
 });
