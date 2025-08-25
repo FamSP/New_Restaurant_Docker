@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuthContext } from "../context/authContext";
 import { useNavigate } from "react-router";
+import RestaurantService from "../services/restaurant.service";
+import Swal from "sweetalert2";
 
 const Add = () => {
   const [restaurant, setRestaurant] = useState({
@@ -9,108 +11,109 @@ const Add = () => {
     imageUrl: "",
   });
   const { user } = useAuthContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user || !user.authorities?.includes("ROLES_ADMIN")) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRestaurant({ ...restaurant, [name]: value });
   };
-  const navigate = useNavigate();
-  useEffect(
-    () => {
-      if (!user && !user?.authorities.includes("ROLES_ADMIN")) {
-        navigate("/");
-      }
-    },
-    [ user ]
-  );
-  const handleSubmit = async () => {
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/v1/restaurant", {
-        method: "POST",
-        body: JSON.stringify(restaurant),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        alert("Restaurannt Adds succesfully!!!");
-        setRestaurant({
-          title: "",
-          type: "",
-          imageUrl: "",
+      const response = await RestaurantService.insertRestaurant(restaurant);
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Add Restaurant",
+          text: "Restaurant added successfully!",
+          icon: "success",
         });
+        setRestaurant({ title: "", type: "", imageUrl: "" });
       }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        title: "Add Restaurant",
+        text: error?.response?.data?.message || error.message,
+        icon: "error",
+      });
     }
   };
+
   return (
-    <div class="relative flex flex-col justify-center h-screen overflow-hidden">
+    <div className="relative flex flex-col justify-center h-screen overflow-hidden">
       <div className="container mx-auto">
-        <div class="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
-          <h1 class="text-2xl font-semibold text-center text-gray-700 mb-6">
+        <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
+          <h1 className="text-2xl font-semibold text-center text-gray-700 mb-6">
             Add Item
           </h1>
-          <form class="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label class="label">
-                <span class="text-base label-text">Title</span>
+              <label className="label">
+                <span className="text-base label-text">Title</span>
               </label>
-
               <input
                 type="text"
                 placeholder="Enter title"
-                class="w-full input input-bordered"
+                className="w-full input input-bordered"
                 name="title"
+                value={restaurant.title}
                 onChange={handleChange}
+                required
               />
             </div>
-
             <div>
-              <label class="label">
-                <span class="text-base label-text">Type</span>
+              <label className="label">
+                <span className="text-base label-text">Type</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter type"
-                class="w-full input input-bordered"
+                className="w-full input input-bordered"
                 name="type"
+                value={restaurant.type}
                 onChange={handleChange}
+                required
               />
             </div>
-
             <div>
-              <label class="label">
-                <span class="text-base label-text">Image URL</span>
+              <label className="label">
+                <span className="text-base label-text">Image URL</span>
               </label>
               <input
                 type="text"
-                ClassName="grow"
-                class="w-full input input-bordered"
+                className="w-full input input-bordered"
                 onChange={handleChange}
                 placeholder="Restaurant imageUrl"
                 name="imageUrl"
+                value={restaurant.imageUrl}
               />
-
               {restaurant.imageUrl && (
-                <div ClassName="flex items-center gap-2">
-                  <img ClassName="h-32" src={restaurant.imageUrl}></img>
+                <div className="flex items-center gap-2 mt-2">
+                  <img
+                    className="h-32"
+                    src={restaurant.imageUrl}
+                    alt="preview"
+                  />
                 </div>
               )}
             </div>
-
-            <div class="flex justify-center items-center my-6 space-x-4">
+            <div className="flex justify-center items-center my-6 space-x-4">
               <button
                 type="submit"
-                class="btn bg-green-500 text-white px-6"
-                onClick={handleSubmit}
+                className="btn bg-green-500 text-white px-6"
               >
                 Add
               </button>
               <a
                 href={"/"}
-                button
                 type="button"
-                class="btn bg-red-500 text-white px-6"
+                className="btn bg-red-500 text-white px-6"
               >
                 Cancel
               </a>

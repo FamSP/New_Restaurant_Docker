@@ -6,8 +6,9 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import NotAllowed from "../pages/NotAllowed";
 import AdminPage from "../pages/AdminPage";
-import UserPage from "../pages/AdminPage";
+import UserPage from "../pages/UserPage";
 import ModPage from "../pages/ModPage";
+
 const router = createBrowserRouter([
   {
     path: "/",

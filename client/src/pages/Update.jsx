@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import RestaurantService from "../services/restaurant.service";
 import { useAuthContext } from "../context/authContext";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 const Update = () => {
   //Get ID from URL
   const { id } = useParams();
@@ -39,16 +40,21 @@ const Update = () => {
   };
   const handleSubmit = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/restaurant/" + id,
-        {
-          method: "PUT",
-          body: JSON.stringify(restaurant),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      // const response = await fetch(
+      //   "http://localhost:5000/api/v1/restaurant/" + id,
+      //   {
+      //     method: "PUT",
+      //     body: JSON.stringify(restaurant),
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      const response = await RestaurantService.editRestaurantById(
+        id,
+        restaurant
       );
+      console.log(response);
       if (response.ok) {
         alert("Restaurant Updated succesfully!!!");
         setRestaurant({
