@@ -14,14 +14,11 @@ const Add = () => {
     setRestaurant({ ...restaurant, [name]: value });
   };
   const navigate = useNavigate();
-  useEffect(
-    () => {
-      if (!user && !user?.authorities.includes("ROLES_ADMIN")) {
-        navigate("/");
-      }
-    },
-    [ user ]
-  );
+  useEffect(() => {
+    if (!user && !user?.authorities.includes("ROLES_ADMIN")) {
+      navigate("/");
+    }
+  }, [user]);
   const handleSubmit = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/v1/restaurant", {
@@ -50,7 +47,7 @@ const Add = () => {
           <h1 class="text-2xl font-semibold text-center text-gray-700 mb-6">
             Add Item
           </h1>
-          <form class="space-y-4">
+          <div class="space-y-4">
             <div>
               <label class="label">
                 <span class="text-base label-text">Title</span>
@@ -115,7 +112,7 @@ const Add = () => {
                 Cancel
               </a>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
