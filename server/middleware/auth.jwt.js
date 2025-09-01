@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import authConfig from "../config/auth.config.js";
 import db from "../models/index.js";
+import User from "../models/user.model.js";
 
 const User = db.User;
 const verifyToken = (req, res, next) => {
