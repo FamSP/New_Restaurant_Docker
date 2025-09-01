@@ -46,7 +46,7 @@ const Home = () => {
       }
       <div>
         <h1 className="title justify-center text-3xl text-center m-5 p-5">
-          Grab Restaurant
+          Grab Restaurantasdasdasdasdsadadfsdgfsd
         </h1>
       </div>
       {
