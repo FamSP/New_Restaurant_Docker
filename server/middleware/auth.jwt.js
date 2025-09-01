@@ -34,6 +34,8 @@ const isAdmin = (req, res, next) => {
 };
 
 const isModOrAdmin = (req, res, next) => {
+  console.log("sdfsd" + req.username);
+  console.log(User);
   User.findByPk(req.username).then((user) => {
     user.getRoles().then((roles) => {
       for (let i = 0; i < roles.length; i++) {
@@ -42,6 +44,7 @@ const isModOrAdmin = (req, res, next) => {
           return;
         }
       }
+
       return res
         .status(401)
         .send({ message: "Unatherized you don't have permission" });
